@@ -1,9 +1,9 @@
+import { Forecast } from "./pages/Forecast"
+
 function App() {
 
   return (
-    <>
-     <h1>Hello World!</h1>
-    </>
+    <Forecast/>
   )
 }
 
