@@ -1,83 +1,49 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-
-interface Swell {
-  direction: number;
-  height: number;
-  period: number;
-}
-
-interface Wave {
-  direction: number;
-  height: number;
-  period: number;
-}
-
-interface Wind {
-  direction: number;
-  speed: number;
-  wave?: Wave; 
-}
-
-interface ForecastData {
-  _id: string; 
-  time: string; 
-  secondarySwell: Swell; 
-  swell: Swell; 
-  wave: Wave; 
-  wind: Wind; 
-}
-
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Card } from "../components/Card";
+import { Loader } from "../components/Loader";
+import { ForecastData } from "../types";
+import { mockForecastData } from "../mockData"; 
 
 export const Forecast = () => {
   const [data, setData] = useState<ForecastData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    axios.get<ForecastData[]>('http://localhost:3000/forecast')
-      .then(response => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get<ForecastData[]>("http://localhost:3000/forecast");
         setData(response.data);
-      })
-      .catch(error => {
-        console.error('Erro ao buscar os dados:', error);
-      });
+      } catch (error) {
+        console.error("Erro ao buscar os dados, usando mock:", error);
+        setData(mockForecastData); 
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    setTimeout(fetchData, 1000);
   }, []);
 
   return (
     <>
-      {/* Cabeçalho centralizado */}
-      <header className="w-full text-center fixed top-0 left-0 bg-gradient-to-b from-[#0A192F] to-[#112240]">
-        <h1 className="text-3xl font-bold text-[#64FFDA]">ZBMFGuru</h1>
+      <header className="w-full text-center fixed top-0 left-0 bg-gradient-to-b from-[#0A192F] to-[#112240] py-4 shadow-lg z-10">
+        <h1 className="text-4xl font-extrabold text-[#64FFDA] tracking-wide">ZBMFGuru</h1>
       </header>
 
-      {/* Container centralizado na tela */}
-      <main className="flex items-center justify-center min-h-screen p-4">
-        {data.length > 0 ? (
-          <div className="flex space-x-6 overflow-x-auto p-4">
+      <main className="flex items-center justify-center min-h-screen p-6 bg-gradient-to-t from-[#112240] to-[#1A2A47]">
+        {loading ? (
+          <Loader />
+        ) : data.length > 0 ? (
+          <div className="flex flex-col flex-wrap justify-center gap-6 p-6">
             {data.map((item, index) => (
-              <div 
-                key={item._id} 
-                className="min-w-[300px] border p-6 rounded-xl shadow-md text-center"
-              >
-                <h2 className="text-lg font-bold">Forecast {index + 1}</h2>
-                <p>
-                  <strong>Time:</strong>{' '}
-                  {new Intl.DateTimeFormat('pt-BR', {
-                    dateStyle: 'short',
-                    timeStyle: 'short',
-                    timeZone: 'UTC',
-                  }).format(new Date(item.time))}
-                </p>
-                <p><strong>Primary Swell:</strong> {item.swell.height}m ({item.swell.direction}°) - {item.swell.period}s</p>
-                <p><strong>Wind:</strong> {item.wind.direction}° | {item.wind.speed}m/s</p>
-                <p><strong>Wave Height:</strong> {item.wave.height}m</p>
-              </div>
+              <Card key={item._id} item={item} index={index} />
             ))}
           </div>
         ) : (
-          <p className="text-center text-gray-500 text-lg">Carregando dados...</p>
+          <p className="text-center text-gray-500 text-lg">Nenhum dado disponível</p>
         )}
       </main>
     </>
   );
 };
-
