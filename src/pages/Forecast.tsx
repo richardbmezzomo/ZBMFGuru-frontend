@@ -26,18 +26,20 @@ export const Forecast = () => {
   }, []);
 
   return (
-    <>
-      <header className="w-full text-center fixed top-0 left-0 bg-gradient-to-b from-[#0A192F] to-[#112240] py-4 shadow-lg z-10">
-        <h1 className="text-4xl font-extrabold text-[#64FFDA] tracking-wide">ZBMFGuru</h1>
+    <div className="bg-gradient-to-b from-blue-400 to-teal-600" >
+      <header className="w-full text-center fixed top-0 left-0 shadow-md z-20 bg-sand">
+        <h1 className="text-5xl font-extrabold tracking-wide text-ocean font-logo">ZBMF Guru</h1>
       </header>
 
-      <main className="flex flex-col items-center justify-center min-h-screen p-6 bg-gradient-to-t from-[#112240] to-[#1A2A47]">
+      <main className="flex flex-col items-center justify-center min-h-screen">
         {loading ? (
           <Loader />
         ) : (
-          <ForecastTable data={data} />
+          <div className="w-full bg-white shadow-lg overflow-hidden rounded-lg">
+            <ForecastTable data={data} />
+          </div>
         )}
       </main>
-    </>
+    </div>
   );
 };

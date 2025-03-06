@@ -1,4 +1,19 @@
-@tailwind utilities;
+@import "tailwindcss";
+
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-display: "Satoshi", "sans-serif";
+  --font-logo: "Amatic SC", sans-serif;
+
+    --color-ocean: oklch(30% 0.2 240);
+    --color-turquoise: oklch(80% 0.25 180);
+    --color-sand: oklch(90% 0.1 80);
+    --color-sunset: oklch(65% 0.25 30);
+    --color-foam: oklch(100% 0 0);
+}
 
 * {
     padding: 0;
@@ -6,6 +21,8 @@
     box-sizing: border-box;
 }
 
-body {
-  font-family: 'Inter', sans-serif;
+html {
+  font-smooth: always;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
